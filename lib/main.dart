@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/screens/home_screen.dart';
-import 'package:flutter_project/screens/login.dart';
-import 'package:flutter_project/screens/register.dart';
+import 'package:flutter_project/screens/loginRegister/login.dart';
+import 'package:flutter_project/screens/loginRegister/register.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
 

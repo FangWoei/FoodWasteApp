@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
 import 'package:flutter_project/main.dart';
 import 'package:flutter_project/screens/home_screen.dart';
-import 'package:flutter_project/screens/register.dart';
+import 'package:flutter_project/screens/loginRegister/register.dart';
 import 'package:go_router/go_router.dart';
 
 class Login extends StatefulWidget {

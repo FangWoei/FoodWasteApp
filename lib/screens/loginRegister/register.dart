@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/data/repo/user_repo.dart';
 import 'package:flutter_project/screens/home_screen.dart';
-import 'package:flutter_project/screens/login.dart';
+import 'package:flutter_project/screens/loginRegister/login.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_project/data/model/user.dart' as model;
