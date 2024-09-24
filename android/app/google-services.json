@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "808521381352",
+    "project_id": "food-waste-app-9a33f",
+    "storage_bucket": "food-waste-app-9a33f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808521381352:android:faf6bc42aeccb42fae605d",
+        "android_client_info": {
+          "package_name": "com.foo.flutter_proj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA1oWqFIQXsAa094j4sPY3xA6Ed0_d044"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808521381352:android:b26457951ff72dedae605d",
+        "android_client_info": {
+          "package_name": "com.foo.flutter_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA1oWqFIQXsAa094j4sPY3xA6Ed0_d044"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
