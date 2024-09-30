@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/data/model/food.dart';
+import 'package:flutter_project/screens/add/add.dart';
+import 'package:flutter_project/screens/food/food_info.dart';
 import 'package:flutter_project/screens/home_screen.dart';
 import 'package:flutter_project/screens/loginRegister/login.dart';
 import 'package:flutter_project/screens/loginRegister/register.dart';
@@ -57,6 +60,20 @@ final GoRouter _router = GoRouter(
             return const HomeScreen();
           },
         ),
+        GoRoute(
+          path: 'add',
+          name: Add.routeName,
+          builder: (BuildContext context, GoRouterState state) {
+            return const Add();
+          },
+        ),
+        GoRoute(
+          path: 'food_info',
+          name: FoodInfo.routeName,
+          builder: (BuildContext context, GoRouterState state) {
+            return FoodInfo(food: state.extra as Food);
+          },
+        )
       ],
     ),
   ],
