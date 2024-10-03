@@ -27,7 +27,15 @@ class _AddState extends State<Add> {
   String? dateError;
 
   String? _selectedCategory;
-  final List<String> _categories = ['Category 1', 'Category 2', 'Category 3'];
+  final List<String> _categories = [
+    'Vegetables',
+    'Fruits',
+    'Grains, legumes, nuts and seeds',
+    'Meat and poultry',
+    'Fish and seafood',
+    'Eggs',
+    'Others'
+  ];
 
   // Image
   File? _image;

@@ -40,23 +40,36 @@ class _EndPageState extends State<EndPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemCount: foods.length,
-        itemBuilder: (context, index) {
-          return FoodItemCard(
-            food: foods[index],
-            onDelete: () => _delete(foods[index].id ?? ''),
-            onTap: () => {},
-          );
-        },
-      ),
+      body: foods.isEmpty
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.no_food, size: 150),
+                  Text(
+                    'No foods yet',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            )
+          : GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: foods.length,
+              itemBuilder: (context, index) {
+                return FoodItemCard(
+                  food: foods[index],
+                  onDelete: () => _delete(foods[index].id ?? ''),
+                  onTap: () => {},
+                );
+              },
+            ),
     );
   }
 }
