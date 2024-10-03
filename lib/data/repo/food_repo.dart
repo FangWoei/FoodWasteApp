@@ -43,31 +43,4 @@ class FoodRepo {
         : null;
   }
 
-  Stream<List<Food>> getFoodsByCategory(String category) {
-    return getCollection()
-        .where('category', isEqualTo: category)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Food.fromMap(doc.data() as Map<String, dynamic>)
-            .copy(id: doc.id);
-      }).toList();
-    });
-  }
-
-  Stream<List<Food>> getFoodsExpiringSoon() {
-    final now = DateTime.now();
-    final sevenDaysLater = now.add(const Duration(days: 7));
-    return getCollection()
-        .where('expiredDate', isGreaterThan: now.millisecondsSinceEpoch)
-        .where('expiredDate',
-            isLessThanOrEqualTo: sevenDaysLater.millisecondsSinceEpoch)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Food.fromMap(doc.data() as Map<String, dynamic>)
-            .copy(id: doc.id);
-      }).toList();
-    });
-  }
 }
