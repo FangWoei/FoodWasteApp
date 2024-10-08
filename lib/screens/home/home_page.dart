@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/data/model/food.dart';
 import 'package:flutter_project/data/repo/food_repo.dart';
+import 'package:flutter_project/data/services/notification_services.dart';
 import 'package:flutter_project/screens/add/add.dart';
 import 'package:flutter_project/screens/card/food_item_card.dart';
 import 'package:flutter_project/screens/food/food_info.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Food> foods = [];
   final repo = FoodRepo();
+  final NotificationService _notificationService = NotificationService();
   String? _selectedCategory;
 
   final List<String> _categories = [
@@ -37,6 +39,7 @@ class _HomePageState extends State<HomePage> {
         }).toList();
 
         _sortFoods();
+        _notificationService.checkFoodExpiry(res);
       });
     }
   }
@@ -45,6 +48,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _init();
     super.initState();
+    _initNotifications();
+  }
+
+  void _initNotifications() async {
+    await _notificationService.initNotification();
   }
 
   void _add() async {
@@ -107,7 +115,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_selectedCategory ?? 'All Foods'),
+        automaticallyImplyLeading: false,
+        title: Text(_selectedCategory ?? ''),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,

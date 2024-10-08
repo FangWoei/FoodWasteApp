@@ -178,7 +178,7 @@ class _AddState extends State<Add> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
 
               SizedBox(
                 width: 300,
@@ -268,7 +268,7 @@ class _AddState extends State<Add> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
               ElevatedButton(
                 onPressed: _add,

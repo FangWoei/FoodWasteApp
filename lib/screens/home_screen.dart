@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
+import 'package:flutter_project/screens/add/add.dart';
 import 'package:flutter_project/screens/home/end_page.dart';
 import 'package:flutter_project/screens/home/home_page.dart';
 import 'package:flutter_project/screens/loginRegister/login.dart';
+import 'package:flutter_project/screens/post/post.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -33,13 +35,15 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const TabBarView(children: [HomePage(), EndPage()]),
+        body: const TabBarView(children: [HomePage(), EndPage(), Post()]),
         bottomNavigationBar: const TabBar(tabs: [
           Tab(
             text: "Home",
             icon: Icon(Icons.home),
           ),
           Tab(text: "Ended", icon: Icon(Icons.delete_forever_outlined)),
+          Tab(text: "Post", icon: Icon(Icons.post_add_rounded)),
+
         ]),
       ),
     );
