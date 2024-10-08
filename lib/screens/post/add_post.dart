@@ -1,47 +1,34 @@
+import 'dart:io';
+import 'package:flutter_project/data/model/post.dart';
+import 'package:flutter_project/data/repo/user_repo.dart';
+import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/data/model/food.dart';
-import 'package:flutter_project/data/repo/food_repo.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_project/data/repo/post_repo.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'dart:io';
-import 'package:path/path.dart' as path;
 
-class Add extends StatefulWidget {
-  const Add({super.key});
-  static const routeName = "add";
+class AddPost extends StatefulWidget {
+  const AddPost({super.key});
+  static const routeName = "add_post";
 
   @override
-  State<Add> createState() => _AddState();
+  State<AddPost> createState() => _AddPostState();
 }
 
-class _AddState extends State<Add> {
-  final repo = FoodRepo();
+class _AddPostState extends State<AddPost> {
+  final repo = PostRepo();
+  final userRepo = UserRepo();
 
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
 
-  String? nameError;
-  String? categoryError;
-  String? dateError;
+  String? titleError;
+  String? descError;
   bool isLoading = false;
-
-  String? _selectedCategory;
-  final List<String> _categories = [
-    'Vegetables',
-    'Fruits',
-    'Grains, legumes, nuts and seeds',
-    'Meat and poultry',
-    'Fish and seafood',
-    'Eggs',
-    'Others'
-  ];
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
-  int _quantity = 1;
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -52,26 +39,10 @@ class _AddState extends State<Add> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    if (isLoading) return;
-
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null) {
-      setState(() {
-        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
-      });
-    }
-  }
-
   Future<String> _uploadImage(File image) async {
     final fileName =
         '${DateTime.now().millisecondsSinceEpoch}_${path.basename(image.path)}';
-    final destination = 'food_images/$fileName';
+    final destination = 'posts/$fileName';
 
     try {
       final ref = FirebaseStorage.instance.ref(destination);
@@ -84,18 +55,16 @@ class _AddState extends State<Add> {
   }
 
   Future<void> _add() async {
-    final name = nameController.text.trim();
-    final date = _dateController.text;
+    final title = titleController.text.trim();
     final desc = descController.text.trim();
 
+    // Validate inputs
     setState(() {
-      nameError = name.isEmpty ? 'Please enter the food name' : null;
-      categoryError =
-          _selectedCategory == null ? 'Please select a category' : null;
-      dateError = date.isEmpty ? 'Please select an expiry date' : null;
+      titleError = title.isEmpty ? 'Please enter a title' : null;
+      descError = desc.isEmpty ? 'Please enter a description' : null;
     });
 
-    if (name.isEmpty || _selectedCategory == null || date.isEmpty) {
+    if (title.isEmpty || desc.isEmpty) {
       return;
     }
 
@@ -104,23 +73,27 @@ class _AddState extends State<Add> {
         isLoading = true;
       });
 
+      // Get current user ID
+      final currentUserId = await userRepo.getCurrentUserId();
+      if (currentUserId == null) {
+        throw Exception('User not authenticated');
+      }
+
+      // Upload image if selected
       String imageUrl = '';
       if (_image != null) {
         imageUrl = await _uploadImage(_image!);
       }
 
-      DateTime expiredDate = DateFormat('yyyy-MM-dd').parse(date);
-
-      Food newFood = Food(
-        name: name,
-        category: _selectedCategory!,
-        expiredDate: expiredDate,
+      // Create and add post
+      final newPost = Post(
+        title: title,
         desc: desc,
-        imageUrl: imageUrl,
-        quantity: _quantity,
+        postImageUrl: imageUrl,
+        authorId: currentUserId,
       );
 
-      await repo.addFood(newFood);
+      await repo.add(newPost, currentUserId);
 
       if (mounted) {
         Navigator.of(context).pop();
@@ -140,27 +113,11 @@ class _AddState extends State<Add> {
     }
   }
 
-  void _incrementQuantity() {
-    if (!isLoading) {
-      setState(() {
-        _quantity++;
-      });
-    }
-  }
-
-  void _decrementQuantity() {
-    if (!isLoading && _quantity > 1) {
-      setState(() {
-        _quantity--;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Food Item"),
+        title: const Text("Add Post"),
       ),
       body: Stack(
         children: [
@@ -213,11 +170,11 @@ class _AddState extends State<Add> {
                   SizedBox(
                     width: 300,
                     child: TextField(
-                      controller: nameController,
+                      controller: titleController,
                       enabled: !isLoading,
                       decoration: InputDecoration(
-                        labelText: "Name",
-                        errorText: nameError,
+                        labelText: "Title",
+                        errorText: titleError,
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -229,75 +186,12 @@ class _AddState extends State<Add> {
                       controller: descController,
                       enabled: !isLoading,
                       maxLines: null,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Description",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: 300,
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedCategory,
-                      decoration: InputDecoration(
-                        labelText: "Category",
-                        errorText: categoryError,
+                        errorText: descError,
                         border: const OutlineInputBorder(),
                       ),
-                      items: _categories.map((category) {
-                        return DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: isLoading
-                          ? null
-                          : (String? newValue) {
-                              setState(() {
-                                _selectedCategory = newValue!;
-                              });
-                            },
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: 300,
-                    child: TextField(
-                      controller: _dateController,
-                      enabled: !isLoading,
-                      decoration: InputDecoration(
-                        labelText: "Expiry Date",
-                        errorText: dateError,
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed:
-                              isLoading ? null : () => _selectDate(context),
-                        ),
-                      ),
-                      readOnly: true,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: isLoading ? null : _decrementQuantity,
-                        icon: const Icon(Icons.remove),
-                        color: Colors.red,
-                      ),
-                      Text(
-                        '$_quantity',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      IconButton(
-                        onPressed: isLoading ? null : _incrementQuantity,
-                        icon: const Icon(Icons.add),
-                        color: Colors.red,
-                      ),
-                    ],
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
@@ -305,7 +199,7 @@ class _AddState extends State<Add> {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(200, 50),
                     ),
-                    child: const Text('Add Food Item'),
+                    child: const Text('Add Post'),
                   ),
                 ],
               ),

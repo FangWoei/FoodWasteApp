@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
-import 'package:flutter_project/screens/add/add.dart';
 import 'package:flutter_project/screens/home/end_page.dart';
 import 'package:flutter_project/screens/home/home_page.dart';
 import 'package:flutter_project/screens/loginRegister/login.dart';
-import 'package:flutter_project/screens/post/post.dart';
+import 'package:flutter_project/screens/post/post_pages.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -21,7 +20,10 @@ class HomeScreen extends StatelessWidget {
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Food", style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),)
+              Text(
+                "Food",
+                style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+              )
             ],
           ),
           centerTitle: true, // Ensure the title itself is centered
@@ -35,7 +37,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const TabBarView(children: [HomePage(), EndPage(), Post()]),
+        body: const TabBarView(children: [HomePage(), EndPage(), PostPages()]),
         bottomNavigationBar: const TabBar(tabs: [
           Tab(
             text: "Home",
@@ -43,7 +45,6 @@ class HomeScreen extends StatelessWidget {
           ),
           Tab(text: "Ended", icon: Icon(Icons.delete_forever_outlined)),
           Tab(text: "Post", icon: Icon(Icons.post_add_rounded)),
-
         ]),
       ),
     );

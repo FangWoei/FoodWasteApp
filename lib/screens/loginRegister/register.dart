@@ -5,6 +5,7 @@ import 'package:flutter_project/screens/loginRegister/login.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_project/data/model/user.dart' as model;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -25,6 +26,7 @@ class _RegisterState extends State<Register> {
   String? passwordError;
   String? conPasswordError;
   String? registerError;
+  bool isLoading = false;
 
   void _register() async {
     final name = nameController.text;
@@ -55,6 +57,8 @@ class _RegisterState extends State<Register> {
       conPasswordError = conPassword != password
           ? 'Your Confirm Password and Password do not match'
           : null;
+
+      isLoading = true;
     });
 
     if (name.isNotEmpty &&
@@ -87,7 +91,17 @@ class _RegisterState extends State<Register> {
         } else {
           print('An unknown error occurred: $e');
         }
+      } finally {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -102,96 +116,108 @@ class _RegisterState extends State<Register> {
         automaticallyImplyLeading: false,
         title: const Text("Register"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Register",
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0),
-              child: SizedBox(
+      body: Stack(children: [
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Register",
+                style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0),
+                child: SizedBox(
+                  width: 300,
+                  child: TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                        labelText: "Username",
+                        errorText: nameError,
+                        border: const OutlineInputBorder()),
+                  ),
+                ),
+              ),
+              SizedBox(
                 width: 300,
                 child: TextField(
-                  controller: nameController,
+                  controller: emailController,
                   decoration: InputDecoration(
-                      labelText: "Username",
-                      errorText: nameError,
+                      labelText: "Email",
+                      errorText: emailError,
                       border: const OutlineInputBorder()),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                    labelText: "Email",
-                    errorText: emailError,
-                    border: const OutlineInputBorder()),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                child: SizedBox(
+                  width: 300,
+                  child: TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                        labelText: "Password",
+                        errorText: passwordError,
+                        border: const OutlineInputBorder()),
+                  ),
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-              child: SizedBox(
+              SizedBox(
                 width: 300,
                 child: TextField(
                   obscureText: true,
-                  controller: passwordController,
+                  controller: conPasswordController,
                   decoration: InputDecoration(
-                      labelText: "Password",
-                      errorText: passwordError,
+                      labelText: "Confirm Password",
+                      errorText: conPasswordError,
                       border: const OutlineInputBorder()),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
-                obscureText: true,
-                controller: conPasswordController,
-                decoration: InputDecoration(
-                    labelText: "Confirm Password",
-                    errorText: conPasswordError,
-                    border: const OutlineInputBorder()),
-              ),
-            ),
-            if (registerError != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  registerError!,
-                  style: const TextStyle(color: Colors.red),
+              if (registerError != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    registerError!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                child: ElevatedButton(
+                  onPressed: _register,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue[400],
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Register'),
                 ),
               ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-              child: ElevatedButton(
-                onPressed: _register,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue[400],
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Register'),
-              ),
-            ),
-            ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  foregroundColor: Colors.blue,
-                ),
-                child: const Text('Login',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blue,
-                    )))
-          ],
+              ElevatedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.blue,
+                  ),
+                  child: const Text('Login',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.blue,
+                      )))
+            ],
+          ),
         ),
-      ),
+        if (isLoading)
+          Container(
+            color: Colors.black54,
+            child: const Center(
+              child: SpinKitWave(
+                color: Colors.green,
+                size: 50.0,
+              ),
+            ),
+          ),
+      ]),
     );
   }
 }

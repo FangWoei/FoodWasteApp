@@ -30,4 +30,13 @@ class UserRepo {
     }
     return null;
   }
+
+  Future<String?> getCurrentUserId() async {
+    try {
+      return _getUid();
+    } catch (e) {
+      print("Error getting current user ID: $e");
+      return null;
+    }
+  }
 }

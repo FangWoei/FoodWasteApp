@@ -4,6 +4,7 @@ import 'package:flutter_project/main.dart';
 import 'package:flutter_project/screens/home_screen.dart';
 import 'package:flutter_project/screens/loginRegister/register.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -21,6 +22,7 @@ class _LoginState extends State<Login> {
   String? emailError;
   String? passwordError;
   String? loginError;
+  bool isLoading = false;
 
   void _login() async {
     final email = emailController.text;
@@ -30,6 +32,7 @@ class _LoginState extends State<Login> {
       emailError = email.isEmpty ? 'Please enter your email' : null;
       passwordError = password.isEmpty ? 'Please enter your password' : null;
       loginError = null;
+      isLoading = true;
     });
 
     if (email.isNotEmpty && password.isNotEmpty) {
@@ -40,7 +43,17 @@ class _LoginState extends State<Login> {
         setState(() {
           loginError = 'Login failed. Please check your email or password.';
         });
+      } finally {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -55,72 +68,92 @@ class _LoginState extends State<Login> {
         automaticallyImplyLeading: false,
         title: const Text("Login"),
       ),
-      body: Center(
-        
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Login",
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 30.0),
-              child: SizedBox(
-                width: 300,
-                child: TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                      labelText: "Email",
-                      errorText: emailError,
-                      border: const OutlineInputBorder()),
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Login",
+                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: InputDecoration(
-                    labelText: "Password",
-                    errorText: passwordError,
-                    border: const OutlineInputBorder()),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 50.0, 0, 20.0),
-              child: ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue[400],
-                  foregroundColor: Colors.white,
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 30.0),
+                  child: SizedBox(
+                    width: 300,
+                    child: TextField(
+                      controller: emailController,
+                      enabled: !isLoading,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        errorText: emailError,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
                 ),
-                child: const Text('Login'),
-              ),
-            ),
-            if (loginError != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  loginError!,
-                  style: const TextStyle(color: Colors.red),
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    enabled: !isLoading,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      errorText: passwordError,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-              ),
-            ElevatedButton(
-                onPressed: _register,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  foregroundColor: Colors.blue,
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 50.0, 0, 20.0),
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue[400],
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Login'),
+                  ),
                 ),
-                child: const Text('Register',
+                if (loginError != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      loginError!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ElevatedButton(
+                  onPressed: isLoading ? null : _register,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.blue,
+                  ),
+                  child: const Text(
+                    'Register',
                     style: TextStyle(
                       decoration: TextDecoration.underline,
                       decorationColor: Colors.blue,
-                    )))
-          ],
-        ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          if (isLoading)
+            Container(
+              color: Colors.black54,
+              child: const Center(
+                child: SpinKitWave(
+                  color: Colors.green,
+                  size: 50.0,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

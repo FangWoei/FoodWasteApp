@@ -7,6 +7,7 @@ import 'package:flutter_project/screens/food/food_info.dart';
 import 'package:flutter_project/screens/home_screen.dart';
 import 'package:flutter_project/screens/loginRegister/login.dart';
 import 'package:flutter_project/screens/loginRegister/register.dart';
+import 'package:flutter_project/screens/post/add_post.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
 
@@ -76,6 +77,13 @@ final GoRouter _router = GoRouter(
           name: FoodInfo.routeName,
           builder: (BuildContext context, GoRouterState state) {
             return FoodInfo(food: state.extra as Food);
+          },
+        ),
+         GoRoute(
+          path: 'add_post',
+          name: AddPost.routeName,
+          builder: (BuildContext context, GoRouterState state) {
+            return const AddPost();
           },
         )
       ],
