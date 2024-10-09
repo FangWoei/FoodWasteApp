@@ -60,23 +60,36 @@ class _PostPagesState extends State<PostPages> {
         onPressed: _add,
         child: const Icon(Icons.post_add),
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 0.9,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
+      body: Stack(children: [
+        Positioned.fill(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.cyan, Colors.green],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
         ),
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          return PostItemCard(
-            post: posts[index],
-            onDelete: () => _delete(posts[index].postId ?? ''),
-            currentUserId: _currentUserId ?? '',
-          );
-        },
-      ),
+        GridView.builder(
+          padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            childAspectRatio: 0.9,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
+          ),
+          itemCount: posts.length,
+          itemBuilder: (context, index) {
+            return PostItemCard(
+              post: posts[index],
+              onDelete: () => _delete(posts[index].postId ?? ''),
+              currentUserId: _currentUserId ?? '',
+            );
+          },
+        ),
+      ]),
     );
   }
 }

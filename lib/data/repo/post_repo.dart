@@ -7,17 +7,22 @@ class PostRepo {
   }
 
   Stream<List<Post>> getAllPosts() {
-    return getCollection().snapshots().map((snapshot) {
+    return getCollection()
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((doc) {
-        return Post.fromMap(doc.data() as Map<String, dynamic>)
-            .copy(postId: doc.id);
+        return Post.fromMap(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
     });
   }
 
   Future<String?> add(Post post, String currentUserId) async {
-    final postWithAuthor = post.copy(authorId: currentUserId);
-    final docRef = await getCollection().add(postWithAuthor.toMap());
+    final postMap = post.toMap();
+    postMap['authorId'] = currentUserId;
+    postMap['createdAt'] = FieldValue.serverTimestamp();
+
+    final docRef = await getCollection().add(postMap);
     return docRef.id;
   }
 

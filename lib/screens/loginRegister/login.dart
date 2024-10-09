@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
-import 'package:flutter_project/main.dart';
 import 'package:flutter_project/screens/home_screen.dart';
 import 'package:flutter_project/screens/loginRegister/register.dart';
 import 'package:go_router/go_router.dart';
@@ -64,19 +63,24 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Login"),
-      ),
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/login.webp',
+              fit: BoxFit.cover,
+            ),
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   "Login",
-                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 30.0),
@@ -89,6 +93,8 @@ class _LoginState extends State<Login> {
                         labelText: "Email",
                         errorText: emailError,
                         border: const OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
                     ),
                   ),
@@ -103,6 +109,8 @@ class _LoginState extends State<Login> {
                       labelText: "Password",
                       errorText: passwordError,
                       border: const OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                   ),
                 ),

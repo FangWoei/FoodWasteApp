@@ -132,36 +132,50 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: foods.isEmpty
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.no_food, size: 150),
-                  Text(
-                    'No foods yet',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            )
-          : GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: foods.length,
-              itemBuilder: (context, index) {
-                return FoodItemCard(
-                  food: foods[index],
-                  onDelete: () => _delete(foods[index].id ?? ''),
-                  onTap: () => _foodInfo(foods[index]),
-                );
-              },
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/home.jpg',
+              fit: BoxFit.cover,
             ),
+          ),
+          // Foreground content
+          foods.isEmpty
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.no_food, size: 150, color: Colors.white,),
+
+                      Text(
+                        'No foods yet',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                )
+              : GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: foods.length,
+                  itemBuilder: (context, index) {
+                    return FoodItemCard(
+                      food: foods[index],
+                      onDelete: () => _delete(foods[index].id ?? ''),
+                      onTap: () => _foodInfo(foods[index]),
+                    );
+                  },
+                ),
+        ],
+      ),
     );
   }
 }

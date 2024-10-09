@@ -112,18 +112,23 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Register"),
-      ),
       body: Stack(children: [
+        Positioned.fill(
+          child: Image.asset(
+            'assets/images/register.jpg',
+            fit: BoxFit.cover,
+          ),
+        ),
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
                 "Register",
-                style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0),
@@ -132,9 +137,12 @@ class _RegisterState extends State<Register> {
                   child: TextField(
                     controller: nameController,
                     decoration: InputDecoration(
-                        labelText: "Username",
-                        errorText: nameError,
-                        border: const OutlineInputBorder()),
+                      labelText: "Username",
+                      errorText: nameError,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -143,9 +151,12 @@ class _RegisterState extends State<Register> {
                 child: TextField(
                   controller: emailController,
                   decoration: InputDecoration(
-                      labelText: "Email",
-                      errorText: emailError,
-                      border: const OutlineInputBorder()),
+                    labelText: "Email",
+                    errorText: emailError,
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
                 ),
               ),
               Container(
@@ -156,9 +167,12 @@ class _RegisterState extends State<Register> {
                     obscureText: true,
                     controller: passwordController,
                     decoration: InputDecoration(
-                        labelText: "Password",
-                        errorText: passwordError,
-                        border: const OutlineInputBorder()),
+                      labelText: "Password",
+                      errorText: passwordError,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -168,9 +182,12 @@ class _RegisterState extends State<Register> {
                   obscureText: true,
                   controller: conPasswordController,
                   decoration: InputDecoration(
-                      labelText: "Confirm Password",
-                      errorText: conPasswordError,
-                      border: const OutlineInputBorder()),
+                    labelText: "Confirm Password",
+                    errorText: conPasswordError,
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
                 ),
               ),
               if (registerError != null)

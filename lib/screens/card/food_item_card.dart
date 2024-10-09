@@ -17,10 +17,10 @@ class FoodItemCard extends StatelessWidget {
 
   String getItemStatus(DateTime expiredDate) {
     if (food.state) return 'Finish';
-    
+
     final currentDate = DateTime.now();
     if (expiredDate.isBefore(currentDate)) return 'Expired';
-    
+
     final difference = expiredDate.difference(currentDate).inDays;
     return difference <= 7 ? 'Expiring Soon' : 'Good';
   }
@@ -59,17 +59,21 @@ class FoodItemCard extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
                 ),
                 child: food.imageUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: food.imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                    ? Center(
+                        child: CachedNetworkImage(
+                          imageUrl: food.imageUrl,
+                          fit: BoxFit
+                              .contain, // Ensures the image is centered and contained
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       )
                     : Center(
                         child: Icon(Icons.image,
-                            size: 50, color: Colors.grey[600])),
+                            size: 50, color: Colors.grey[600]),
+                      ),
               ),
             ),
             Padding(
@@ -89,7 +93,8 @@ class FoodItemCard extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: onDelete,
-                        child: const Icon(Icons.delete, color: Colors.red, size: 20),
+                        child: const Icon(Icons.delete,
+                            color: Colors.red, size: 20),
                       ),
                     ],
                   ),
@@ -119,7 +124,8 @@ class FoodItemCard extends StatelessWidget {
                         ),
                         child: Text(
                           status,
-                          style: const TextStyle(fontSize: 10, color: Colors.black),
+                          style: const TextStyle(
+                              fontSize: 10, color: Colors.black),
                         ),
                       ),
                     ],

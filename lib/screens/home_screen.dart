@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/data/services/auth_service.dart';
+import 'package:flutter_project/screens/bmi/bmi_page.dart';
 import 'package:flutter_project/screens/home/end_page.dart';
 import 'package:flutter_project/screens/home/home_page.dart';
 import 'package:flutter_project/screens/loginRegister/login.dart';
@@ -13,9 +14,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 192, 255, 185),
           automaticallyImplyLeading: false,
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -37,15 +39,20 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const TabBarView(children: [HomePage(), EndPage(), PostPages()]),
-        bottomNavigationBar: const TabBar(tabs: [
-          Tab(
-            text: "Home",
-            icon: Icon(Icons.home),
-          ),
-          Tab(text: "Ended", icon: Icon(Icons.delete_forever_outlined)),
-          Tab(text: "Post", icon: Icon(Icons.post_add_rounded)),
-        ]),
+        body: const TabBarView(
+            children: [HomePage(), EndPage(), PostPages(), BmiPage()]),
+        bottomNavigationBar: Container(
+          color: const Color.fromARGB(255, 192, 255, 185),
+          child: const TabBar(tabs: [
+            Tab(
+              text: "Home",
+              icon: Icon(Icons.home),
+            ),
+            Tab(text: "Ended", icon: Icon(Icons.delete_forever_outlined)),
+            Tab(text: "Post", icon: Icon(Icons.post_add_rounded)),
+            Tab(text: "BMI", icon: Icon(Icons.speed_sharp)),
+          ]),
+        ),
       ),
     );
   }
